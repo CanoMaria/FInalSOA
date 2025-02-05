@@ -69,7 +69,7 @@ public class RestTemplate {
     }
 
     public Historico getHistorico(Long id) {
-        String url = "http://localhost:8090/historico/".concat(String.valueOf(id));
+        String url = "http://"+direccionConexionB+"/historico/".concat(String.valueOf(id));
         Historico forObject = restTemplate.getForObject(url, Historico.class);
         log.info("Result" + forObject);
         System.out.println(forObject.toString());

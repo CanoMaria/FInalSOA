@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,14 +58,34 @@ public class HistoricoRestController {
 		}
 	}
 
-	@GetMapping(value = "/all-page", produces = MediaType.APPLICATION_JSON_VALUE)
+	/*@GetMapping(value = "/all-page", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Historico>> listAllPage(Pageable pageable) {
 		try {
 			return new ResponseEntity<List<Historico>>(historicoBusiness.listPage(pageable).getContent(), HttpStatus.OK);
 		} catch (NegocioException e) {
 			return new ResponseEntity<List<Historico>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} 
+	}*/
+	@GetMapping(value = "/all-page", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Historico>> listAllPage(
+	        @RequestParam String category,
+	        @RequestParam String subcategory,
+	        @RequestParam String order,
+	        @RequestParam int pageSize,
+	        @RequestParam int page) {
+	    try {
+	        // Construir el Pageable con orden y tamaño de página
+	        Sort sort = "desc".equalsIgnoreCase(order) ? Sort.by("fechaHoraRecepcion").descending()
+	                                                   : Sort.by("fechaHoraRecepcion").ascending();
+	        Pageable pageable = PageRequest.of(page, pageSize, sort);
+
+	        // Llamar al servicio con los parámetros de filtro y paginación
+	        return new ResponseEntity<>(historicoBusiness.listPage(category, subcategory, pageable).getContent(), HttpStatus.OK);
+	    } catch (NegocioException e) {
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 	}
+
 
 	//---------Guardar Historico en BD------------------
 

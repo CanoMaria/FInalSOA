@@ -1,14 +1,13 @@
 package ar.edu.iua.iw3.modelo.cache;
 
-import ar.edu.iua.iw3.modelo.Historico;
-import net.spy.memcached.MemcachedClient;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import ar.edu.iua.iw3.modelo.Historico;
+import net.spy.memcached.MemcachedClient;
 
 @Component
 public class Memcache{
@@ -35,9 +34,15 @@ private   MemcachedClient mcc;
     }
 
 
-    public boolean actualizar(Historico historico,int tiempo){
+    /*public boolean actualizar(Historico historico,int tiempo){
         return  mcc.set(String.valueOf(historico.getId_historico()), tiempo, historico.getJson(historico)).isDone();
+    }*/
+    public boolean actualizar(Historico historico, int tiempo) {
+        // Utilizamos el identificador como la clave
+        String key = String.valueOf(historico.getIdentificador());
+        return mcc.set(key, tiempo, historico.getJson(historico)).isDone();
     }
+
 
 
     public boolean eliminar(Long id){

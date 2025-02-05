@@ -69,7 +69,7 @@ public class HistoricoBusiness implements IHistoricoBusiness{
 	}
 
 
-	@Override
+	/*@Override
 	public Page listPage(Pageable pageable) throws NegocioException {
 
 		Optional<Page> op;
@@ -81,10 +81,26 @@ public class HistoricoBusiness implements IHistoricoBusiness{
 		}
 
 		return op.get();
+	}*/
+	@Override
+	public Page<Historico> listPage(String category, String subcategory, Pageable pageable) throws NegocioException {
+	    try {
+	        // Verificar si subcategory está vacío o es null
+	        if (subcategory == null || subcategory.trim().isEmpty()) {
+	            return historicoDAO.findByCategory(category, pageable); // Llamada al método que busca solo por categoría
+	        } else {
+	            return historicoDAO.findByCategoryAndSubcategory(category, subcategory, pageable); // Llamada al método que busca por categoría y subcategoría
+	        }
+	    } catch (Exception e) {
+	        log.error(e.getMessage(), e);
+	        throw new NegocioException(e);
+	    }
 	}
 
 
-	@Override
+
+
+	/*@Override
 	public RespuestaGenerica<Historico> add(Historico historico) throws NegocioException {
 		MensajeRespuesta m=new MensajeRespuesta();
 		try {
@@ -101,7 +117,44 @@ public class HistoricoBusiness implements IHistoricoBusiness{
 			log.error(e.getMessage(), e);
 			throw new NegocioException(e);
 		}
+	}*/
+	@Override
+	public RespuestaGenerica<Historico> add(Historico historico) throws NegocioException {
+	    MensajeRespuesta m = new MensajeRespuesta();
+	    
+	    try {
+	    	historico.setFechaHoraRecepcion(new Date());
+			historicoDAO.save(historico);
+			m.setMensaje(historico.toString());
+			
+			ultimo=historico.getIdentificador();
+			
+			
+	        // Verificamos si el identificador ya está en el cache
+	        String cachedData = cache.buscar(ultimo);
+
+	        // Si está en el cache, lo actualizamos
+	        if (cachedData != null) {
+	            if (cache.actualizar(historico, 3600)) {
+	                log.debug("Histórico con identificador " + ultimo+ " actualizado en el cache");
+	            } else {
+	                log.warn("No se pudo actualizar el histórico con identificador " + ultimo + " en el cache");
+	            }
+	        } else {
+	            // Si no está en el cache, lo agregamos
+	            if (cache.agregar(historico, String.valueOf(ultimo), 3600)) {
+	                log.debug("Histórico con identificador " + ultimo+ " guardado en el cache");
+	            } else {
+	                log.warn("No se pudo agregar el histórico con identificador " + ultimo + " al cache");
+	            }
+	        }   
+	        return new RespuestaGenerica<Historico>(historico, m);
+	    } catch (Exception e) {
+	        log.error(e.getMessage(), e);
+	        throw new NegocioException(e);
+	    }
 	}
+
 
 	@Override
 	public Historico update(Historico historico) throws NoEncontradoException, NegocioException {

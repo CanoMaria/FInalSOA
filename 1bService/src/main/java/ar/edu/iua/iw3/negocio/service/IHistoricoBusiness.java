@@ -20,7 +20,7 @@ public interface IHistoricoBusiness {
 
 	public List<Historico> list() throws NegocioException;
 
-	Page listPage(org.springframework.data.domain.Pageable pageable) throws NegocioException;
+	//Page listPage(org.springframework.data.domain.Pageable pageable) throws NegocioException;
 
 	public RespuestaGenerica<Historico> add(Historico historico) throws NegocioException;
 
@@ -29,4 +29,7 @@ public interface IHistoricoBusiness {
 	public RespuestaGenerica<Historico> delete(Long id) throws NoEncontradoException, NegocioException;
 
 	public HistoricoDTO loadLastHistory(String identificador) throws NoEncontradoException, NegocioException, JsonProcessingException;
+
+	Page<Historico> listPage(String category, String subcategory, org.springframework.data.domain.Pageable pageable)
+			throws NegocioException;
 }

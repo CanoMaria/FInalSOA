@@ -7,11 +7,11 @@ ar/edu/iua/iw3/negocio/service/RawDataBusiness.class
 ar/edu/iua/iw3/negocio/excepciones/NoEncontradoException.class
 ar/edu/iua/iw3/negocio/excepciones/UnprocessableException.class
 ar/edu/iua/iw3/modelo/persistencia/UbicacionRepository.class
-ar/edu/iua/iw3/Iw3Application.class
 ar/edu/iua/iw3/modelo/RawData.class
 ar/edu/iua/iw3/modelo/Ubicacion.class
-ar/edu/iua/iw3/negocio/service/UbicacionBusiness.class
+ar/edu/iua/iw3/Iw3Application.class
 ar/edu/iua/iw3/modelo/cache/Memcache.class
+ar/edu/iua/iw3/negocio/service/UbicacionBusiness.class
 ar/edu/iua/iw3/modelo/persistencia/RawDataRepository.class
 ar/edu/iua/iw3/negocio/excepciones/BadRequest.class
 ar/edu/iua/iw3/modelo/Historico.class

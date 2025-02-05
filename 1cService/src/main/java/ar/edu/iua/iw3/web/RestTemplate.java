@@ -53,11 +53,30 @@ public class RestTemplate {
         System.out.println(forObject.toString());
         return forObject;
     }
-    public List<Historico> getHistoricosList(String pageSize,String page) {
+    /*public List<Historico> getHistoricosList(String pageSize,String page) {
         String url = "http://"+direccionConexionB+"/historico/all-page?size=".concat(pageSize)+"&page=".concat(page);
         Historico[] forObject = restTemplate.getForObject(url, Historico[].class);
         log.info("Result" + Arrays.toString(forObject));
         return  Arrays.asList(forObject);
-    }   
+    }   */
+    public List<Historico> getHistoricosList(String pageSize, String page, String category, String subcategory, String order) {
+        // Construir la URL con los nuevos parámetros de la solicitud
+        String url = "http://"+direccionConexionB+"/historico/all-page?category="
+                        .concat(category)
+                        .concat("&subcategory=").concat(subcategory)
+                        .concat("&order=").concat(order)
+                        .concat("&pageSize=").concat(pageSize)
+                        .concat("&page=").concat(page);
+        
+        // Realizar la solicitud GET y deserializar la respuesta en un array de Historico
+        Historico[] forObject = restTemplate.getForObject(url, Historico[].class);
+        
+        // Loguear el resultado
+        log.info("Result: " + Arrays.toString(forObject));
+        
+        // Convertir el array de Historico a una lista
+        return Arrays.asList(forObject);
+    }
+
 
 }
